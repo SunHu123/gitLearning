@@ -1,0 +1,8 @@
+POST http://localhost:8777/metrics/service/metricsdata/list/0?seq=1 HTTP/1.1
+apptoken: F4DC95EDBB7ABC4FB7EB57762B33B960
+content-type: application/json
+
+{
+    "startIndex":1,
+    "length":10
+}
