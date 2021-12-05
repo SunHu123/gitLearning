@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息接收</title>
+    <style>
+        .content {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .data {
+            min-width: 800px;
+            font-size: 20px;
+        }
+    </style>
+    <script src="js/axios.min.js"></script>
+
+</head>
+<body style="height: 100%;">
+    <div class="content">
+        <div><h1>重要提醒：您收到的消息将被记录并审计，接收不合规数据将被停用账号</h1></div>
+        <div>
+            <textarea id="txtReceiver" rows="20" class="data" autofocus></textarea>
+        </div>
+        <div>
+            <span id="lblMessage"></span>
+        </div>
+    </div>
+	
+	<script>
+
+    let wsServer=function({code,method,message, successFunc, errorFunc,version,baseUrl}){
+        let url;
+        if (baseUrl != null) {
+            url = baseUrl;
+        }
+        else{
+            let currentLocation = document.location;
+            let pathName = currentLocation.pathname;
+            url= currentLocation.protocol.replace("http","ws") + "//" + currentLocation.host + 
+            pathName.substring(0, pathName.indexOf("/", 1)) + "/wsserver";
+        }
+        let ws = new WebSocket(url);
+        let my=this;
+        ws.onopen = function () {
+            if(code){
+                my.sendData({code:code,method:method,message:message,version:version});
+            }
+        };
+        ws.onmessage = function (event) {
+            if(successFunc){
+                let data=event.data;
+                switch(data.substr(0,1)){
+                    case 'j':
+                        return successFunc('json',JSON.parse(data.substr(1)));
+                    case 't':
+                        return successFunc('text',data.substr(1));
+                    case "r" :
+                        return successFunc('redirect',data.substr(1));
+                    case "e" :
+                        return successFunc('error',data.substr(1));
+                    case "b":
+                        //TODO handle binary message
+                }
+            }
+        };
+        ws.onclose = function (event) {
+            if(errorFunc){
+                errorFunc("close",event);
+            }
+        };
+        ws.onerror=function(event){
+            if(errorFunc){
+                errorFunc("error",event);
+            }
+        }
+
+        this.ws=ws;
+
+        this.sendData=function({code,method,message,version}){
+            var content=JSON.stringify({"d": JSON.stringify(message) ,"c":code,"m":method,"v":version?version:0});
+            var data=new Blob([content]);
+            this.ws.send(data);
+        }
+
+    }
+
+    var ws = null;
+    ws=new wsServer(
+        {code:"safeshare",
+        method:"watch",
+        message:{},
+        successFunc:function(type,data){
+            document.getElementById("txtReceiver").value=data.content; 
+        },
+        errorFunc:function(type,data){
+            document.getElementById("lblMessage").innerText=type;
+        }
+    });
+
+    </script>
+</body>
+</html>

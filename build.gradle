@@ -1,0 +1,52 @@
+apply plugin: 'java-library'
+apply plugin:  'application'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+sourceCompatibility = 16
+
+repositories {
+	maven {
+		url "https://maven.aliyun.com/repository/central"
+	}
+	maven {
+		url "http://134.64.116.90:8101/nexus/content/repositories/Java4AhdxZZKF"
+		allowInsecureProtocol = true
+	}
+	maven {
+		url "https://maven.aliyun.com/repository/jcenter"
+	}
+}
+application {
+    mainClassName = 'com.chinatelecom.im.safeshare.SafeShareDataServer'
+    applicationDefaultJvmArgs = ['--add-opens java.base/java.lang=ALL-UNNAMED']
+}
+
+dependencies {
+
+	implementation(
+	'com.ahchinatelecom.it:auth-library:1.0.0',
+	'com.chinatelecom.udp.core:embed-server:it.1.0.0',
+	'com.chinatelecom.udp.core:websecurity-library:it.1.0.0',
+	'commons-fileupload:commons-fileupload:1.4',
+	'org.apache.tomcat.embed:tomcat-embed-websocket:10.0.11',
+	 'org.postgresql:postgresql:42.2.20',
+	 'xerces:xercesImpl:2.12.1'
+	)
+
+    // Use JUnit test framework.
+    testImplementation 'junit:junit:4.13'
+
+}
+
+configurations.all {
+    exclude group: 'cglib'
+}
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+processResources {
+    from ('src/main/webapp') {
+        into 'html'
+    }
+}

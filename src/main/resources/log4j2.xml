@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="com.chinatelecom.udp.core.log4j" >
+	<Appenders>
+		<Console name="JsonFile" target="SYSTEM_OUT">
+      		<LogStashJSONLayout excludeLog="true" excludeLogger="1" jsonForMessage="true">
+				<KeyValuePair key="Name" value="metricsservice"/>
+				<KeyValuePair key="User" value="${sys:user.name}"/>
+				<KeyValuePair key="EmpeeAcct" value="$${ctx:empeeAcct}"/>
+				<KeyValuePair key="IP" value="$${ctx:IP}"/>		
+				<KeyValuePair key="TN" value="$${ctx:TN}"/>		     
+  	      </LogStashJSONLayout>
+    	</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="JsonFile" />
+		</Root>
+		<Logger name="org" level="info" additivity="false">
+			<AppenderRef ref="JsonFile" />
+		</Logger>
+	</Loggers>
+</Configuration>

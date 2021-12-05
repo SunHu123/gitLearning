@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <meta http-equiv="X-UA-Compatible" content="IE=9;IE=8;IE=7;ie=edge">
+<head>
+    <meta charset="UTF-8">
+    <title>发送消息</title>
+    <style>
+        .content {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .data {
+            min-width: 800px;
+            font-size: 20px;
+        }
+
+        .command{
+            font-size: 30px;
+            width: 200px;
+            margin-top: 30px;
+          
+        }
+
+    </style>
+    
+</head>
+
+<body>
+    <div class="content">
+        <div><h1>重要提醒：您发送的消息将被记录并审计，不允许发送敏感类信息</h1></div>
+        <div>
+            <textarea id="txtSender" rows="20" class="data" autofocus></textarea>
+        </div>
+        <div>
+            <button id="cmdSend" class="command">发送</button>    
+        </div>
+        <div>
+            <h3 id="lblMessage"></h3>
+        </div>
+    </div>
+    <script>
+        function cmdSend(){
+            var content=document.getElementById("txtSender").value;
+            if(!content){
+                document.getElementById("lblMessage").innerText="发送内容不能为空";
+            }
+            else if (content.length>10000){
+                document.getElementById("lblMessage").innerText="发送内容不能超过10000个字符";
+            }
+            else{
+                document.getElementById("lblMessage").innerText="正在发送";
+                var xhr =  new XMLHttpRequest();
+                xhr.withCredentials = true;
+                xhr.open('post', 'service/safeshare/publish/0?seq=0', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send(JSON.stringify({content:document.getElementById("txtSender").value}));
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        if(xhr.status == 200){
+                            var data=JSON.parse(xhr.responseText);
+                            if(data.result!=0){
+                                document.getElementById("lblMessage").innerText=data.message;
+                            }
+                            else{
+                                document.getElementById("lblMessage").innerText="发送成功";
+                            }
+                        }
+                        else{
+                            document.getElementById("lblMessage").innerText=xhr.statusText;
+                        }
+                    }
+                }
+            }
+        }
+        if(window.attachEvent){
+            document.getElementById("cmdSend").attachEvent("onclick",cmdSend);
+        }
+        else{
+            document.getElementById("cmdSend").addEventListener("click",cmdSend);
+        }
+
+    </script>
+</body>
+
+</html>

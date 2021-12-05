@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <application>
+        <name>none</name>
+        <netid>0</netid>
+        <manager>local</manager>
+    </application>
+    <manager name="local">
+       
+    </manager>
+    <manager name="server" token="HZwRet/NB7pk4+cubnMICA==">
+        	<servers>
+        	    <server address="127.0.0.1" port="7927"/>
+        	    <server address="127.0.0.1" port="7927"/>
+        	</servers>
+    </manager>
+    <custom>
+    	  <!-- <item namespace="com.chinatelecom.udp.core.dataaccess.redis.RedisCluster" name="redis" type="map">
+			<useredis value="1" type="int"/>
+			<nodes value="127.0.0.1:6379"/>
+			<password value="Dev2021@"/>
+		</item> -->
+    </custom>
+</config>
