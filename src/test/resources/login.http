@@ -1,6 +1,21 @@
+# @name login
 POST http://localhost:8777/metrics/service/worksmartlogin/login/0?seq=1
 content-type: application/json
 
 {
-    "app_code_token":"C1B781F519B8013D98D9B9271EEA4FFB2D5101237BB41F20432343F4C644C520EB63F617C2E809680E30C8939F87FEA0"
+    "app_code_token":"11"
+}
+
+
+
+###
+@authToken = {{login.response.body.apptoken}}
+
+POST http://localhost:8777/metrics/service/metricsdata/list/0?seq=1 HTTP/1.1
+apptoken: {{authToken}}
+content-type: application/json
+
+{
+    "startIndex":1,
+    "length":10
 }
