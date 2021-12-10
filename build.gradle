@@ -31,9 +31,9 @@ dependencies {
 	 'org.postgresql:postgresql:42.2.20',
 	 'xerces:xercesImpl:2.12.1'
 	)
-
-    // Use JUnit test framework.
-    testImplementation 'junit:junit:4.13'
+	annotationProcessor  'org.projectlombok:lombok:1.18.20'
+	compileOnly 'org.projectlombok:lombok:1.18.20'
+	testImplementation 'junit:junit:4.13'
 
 }
 
